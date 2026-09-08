@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pool Clock</title>
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self'; connect-src 'none'; object-src 'none'; base-uri 'none'">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="clock-container">
+    <div class="sensor sensor--top-left" data-sensor="outdoor" role="group" aria-label="Outdoor">
+      <button class="sensor-button" type="button" data-settings="outdoor" aria-label="Configure outdoor sensor" title="Configure sensor">
+        <svg class="sensor-icon" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <circle cx="16" cy="16" r="6"/>
+        <path d="M16 2v4m0 20v4M2 16h4m20 0h4M6.1 6.1l2.8 2.8m14.2 14.2 2.8 2.8M6.1 25.9l2.8-2.8M23.1 8.9l2.8-2.8"/>
+        </svg>
+      </button>
+      <span class="sensor-value">—</span>
+      <span class="sensor-status" role="status">not configured</span>
+    </div>
+
+    <div class="sensor sensor--top-right" data-sensor="air" role="group" aria-label="Air">
+      <button class="sensor-button" type="button" data-settings="air" aria-label="Configure air sensor" title="Configure sensor">
+        <svg class="sensor-icon" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="m3 14 13-11 13 11M6 12v16h20V12M12 28V18h8v10"/>
+        </svg>
+      </button>
+      <span class="sensor-value">—</span>
+      <span class="sensor-status" role="status">not configured</span>
+    </div>
+
+    <div class="sensor sensor--bottom-left" data-sensor="water" role="group" aria-label="Water">
+      <button class="sensor-button" type="button" data-settings="water" aria-label="Configure water sensor" title="Configure sensor">
+        <svg class="sensor-icon" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M3 8c3-3 5-3 8 0s5 3 8 0 5-3 10 0M3 16c3-3 5-3 8 0s5 3 8 0 5-3 10 0M3 24c3-3 5-3 8 0s5 3 8 0 5-3 10 0"/>
+        </svg>
+      </button>
+      <span id="water-temperature-value" class="sensor-value">—</span>
+      <span class="sensor-status" role="status">not configured</span>
+    </div>
+
+    <div class="sensor sensor--bottom-right" data-sensor="humidity" role="group" aria-label="Humidity">
+      <button class="sensor-button" type="button" data-settings="humidity" aria-label="Configure humidity sensor" title="Configure sensor">
+        <svg class="sensor-icon" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M16 2C13 6 6 13 6 20a10 10 0 0 0 20 0c0-7-7-14-10-18Z"/>
+        </svg>
+      </button>
+      <span class="sensor-value">—</span>
+      <span class="sensor-status" role="status">not configured</span>
+    </div>
+
+    <svg id="clock" viewBox="0 0 400 400" aria-label="Analog clock">
+      <g id="ticks"></g>
+      <image
+        class="logo logo--offline"
+        role="button"
+        tabindex="0"
+        data-settings="server"
+        href="img/tag-heuer-seeklogo-2.svg"
+        x="155"
+        y="72"
+        width="90"
+        height="78"
+        aria-label="Server settings: SSE disconnected"
+      />
+      <line id="hour-hand" class="hand hour-hand" x1="200" y1="200" x2="200" y2="112" />
+      <line id="minute-hand" class="hand minute-hand" x1="200" y1="200" x2="200" y2="58" />
+      <circle class="center-dot" cx="200" cy="200" r="6" />
+    </svg>
+  </div>
+  <dialog id="settings-dialog" aria-labelledby="settings-title">
+    <form id="settings-form">
+      <h1 id="settings-title">Server settings</h1>
+      <p id="settings-hint"></p>
+      <label for="settings-address" id="settings-label">Server address</label>
+      <input id="settings-address" type="text" autocomplete="off" spellcheck="false">
+      <div id="mode-field">
+        <label for="settings-mode">Update mode</label>
+        <select id="settings-mode">
+          <option value="http">HTTP — SSE changes + every minute</option>
+          <option value="sse">SSE — event stream</option>
+        </select>
+      </div>
+      <div id="text-size-field" hidden>
+        <label for="settings-text-size">Sensor text size <output id="text-size-value" for="settings-text-size">32 px</output></label>
+        <input id="settings-text-size" type="range" min="16" max="96" step="1" value="32">
+      </div>
+      <div id="text-weight-field" hidden>
+        <label for="settings-text-weight">Sensor font weight <output id="text-weight-value" for="settings-text-weight">Light</output></label>
+        <input id="settings-text-weight" type="range" min="0" max="3" step="1" value="0">
+        <div id="weight-stops" class="weight-stops" aria-hidden="true"></div>
+      </div>
+      <div id="second-pulse-field" hidden>
+        <label class="toggle-setting" for="settings-second-pulse">
+          <span>Second pulse</span>
+          <input id="settings-second-pulse" type="checkbox" role="switch" checked>
+        </label>
+      </div>
+      <p class="settings-error" id="settings-error" role="alert"></p>
+      <div class="dialog-actions">
+        <button type="button" id="settings-cancel">Cancel</button>
+        <button type="submit" id="settings-save">Save</button>
+      </div>
+    </form>
+  </dialog>
+  <script src="clock.js"></script>
+  <script src="sensor-config.js"></script>
+  <script src="sensors.js"></script>
+</body>
+</html>
