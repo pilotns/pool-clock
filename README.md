@@ -47,6 +47,19 @@ After updating project files, restart the kiosk from SSH with `sudo systemctl re
 
 To disable automatic kiosk launch, remove the block between `# BEGIN POOL CLOCK KIOSK` and `# END POOL CLOCK KIOSK` from the user's login profile, then remove `/etc/systemd/system/getty@tty1.service.d/pool-clock.conf` and run `sudo systemctl daemon-reload`. Other getty overrides, if present, remain in effect.
 
+## Remote configuration over SSH
+
+Log in as the kiosk user (`pilotns`), then run:
+
+```sh
+sudo systemctl stop getty@tty1.service
+cd /home/pilotns/pool-clock
+npm run configure
+sudo systemctl start getty@tty1.service
+```
+
+Run `npm run configure` without sudo. The terminal wizard edits the same user configuration file as the app, creating it when first saved. It asks for the server address and each sensor's item name and HTTP/SSE mode. Enter keeps the current value; `-` clears a server or item. Invalid input is rejected. Confirm with `y` to save; otherwise the file stays unchanged. Display settings are preserved. Existing unreadable or invalid configuration files are reported rather than overwritten. If the kiosk uses a custom `XDG_CONFIG_HOME`, use the same value in the SSH session.
+
 ## Settings
 
 - Click the logo to adjust sensor reading text size (16–96 px) and font weight (four fixed positions: Light, Regular, Medium, Bold) with live changes on the main display behind the settings dialog. Save keeps the size across restarts; Cancel or Escape restores the saved size. Changing only typography preserves sensor connections and readings.

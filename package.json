@@ -8,6 +8,7 @@
   },
   "scripts": {
     "start": "electron .",
+    "configure": "node scripts/configure.js",
     "test": "node --test test/*.test.js",
     "test:ui": "electron test/electron-smoke.js",
     "start:kiosk": "electron . --kiosk"
