@@ -1,0 +1,13 @@
+# Installed dependencies
+node_modules/
+
+# Logs
+*.log
+
+# Test coverage
+coverage/
+.nyc_output/
+
+# OS metadata
+.DS_Store
+Thumbs.db
