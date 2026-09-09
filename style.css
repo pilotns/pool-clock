@@ -56,8 +56,8 @@ body {
 
 
 #clock {
-  width: min(85vmin, 85vw);
-  height: min(85vmin, 85vw);
+  width: 100vmin;
+  height: 100vmin;
 }
 
 .tick {
@@ -66,12 +66,13 @@ body {
 }
 
 .tick--5min {
-  stroke-width: 2;
+  stroke: #ccc;
+  stroke-width: 8;
 }
 
 .tick--15min {
   stroke: #ccc;
-  stroke-width: 4;
+  stroke-width: 12;
 }
 
 .tick-dot {
@@ -131,7 +132,6 @@ dialog input:focus, dialog select:focus { outline: 2px solid #e63900; }
   .sensor-icon { width: 2.5rem; height: 2.5rem; }
   .sensor-value { font-size: var(--sensor-text-size, 24px); }
   .sensor { min-width: 3.5rem; gap: 0.15rem; }
-  #clock { width: 62vmin; height: 62vmin; }
 }
 
 #text-size-value, #text-weight-value { float: right; color: #aaa; font-variant-numeric: tabular-nums; }

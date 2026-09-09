@@ -1,8 +1,8 @@
 const CX = 200;
 const CY = 200;
 const OUTER_RADIUS = 190;
-const TICK_5MIN_LENGTH = 14;
-const TICK_15MIN_LENGTH = 22;
+const TICK_5MIN_LENGTH = 28;
+const TICK_15MIN_LENGTH = 34;
 const secondMarks = [];
 let activeSecond = null;
 
@@ -43,7 +43,7 @@ function createTicks() {
     const dot = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
     dot.setAttribute('cx', x);
     dot.setAttribute('cy', y);
-    dot.setAttribute('r', 1.4);
+    dot.setAttribute('r', 3.2);
     dot.setAttribute('class', 'tick-dot');
     secondMarks[minute] = dot;
     fragment.appendChild(dot);
