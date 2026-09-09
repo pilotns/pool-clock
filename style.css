@@ -65,18 +65,26 @@ body {
   stroke-linecap: round;
 }
 
+#clock-date {
+  fill: #fff;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 22px;
+  font-weight: 400;
+  pointer-events: none;
+}
+
 .tick--5min {
-  stroke: #ccc;
-  stroke-width: 8;
+  stroke: #fff;
+  stroke-width: 10;
 }
 
 .tick--15min {
-  stroke: #ccc;
-  stroke-width: 12;
+  stroke: #fff;
+  stroke-width: 15;
 }
 
 .tick-dot {
-  fill: #666;
+  fill: #181818;
 }
 
 .logo {
@@ -95,11 +103,11 @@ body {
 }
 
 .hour-hand {
-  stroke-width: 6;
+  stroke-width: 9;
 }
 
 .minute-hand {
-  stroke-width: 3;
+  stroke-width: 5;
 }
 
 .center-dot {
@@ -146,6 +154,8 @@ dialog input:focus, dialog select:focus { outline: 2px solid #e63900; }
   animation: second-pulse 0.5s ease-in-out;
 }
 .tick.tick--current { --pulse-scale: 1.12; }
+:root:not(.second-pulse-disabled) .tick-dot.tick--current { fill: #fff; }
+:root:not(.second-pulse-disabled) .tick.tick--current { stroke: #fff; }
 @keyframes second-pulse {
   0%, 100% { transform: scale(1); }
   33.333% { transform: scale(var(--pulse-scale)); }

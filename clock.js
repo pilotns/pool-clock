@@ -1,10 +1,14 @@
 const CX = 200;
 const CY = 200;
 const OUTER_RADIUS = 190;
-const TICK_5MIN_LENGTH = 28;
-const TICK_15MIN_LENGTH = 34;
+const TICK_5MIN_LENGTH = 36;
+const TICK_15MIN_LENGTH = 54;
 const secondMarks = [];
 let activeSecond = null;
+const dateFormatter = new Intl.DateTimeFormat('ru-RU', {
+  weekday: 'long', day: 'numeric', month: 'long',
+});
+let displayedDate = '';
 
 function pointOnDial(minutes, radius) {
   const radians = ((minutes / 60) * 360 - 90) * Math.PI / 180;
@@ -31,6 +35,10 @@ function createTicks() {
     line.setAttribute('x2', x2);
     line.setAttribute('y2', y2);
     line.setAttribute('class', isQuarter ? 'tick tick--15min' : 'tick tick--5min');
+    if (isQuarter) {
+      line.style.transformBox = 'view-box';
+      line.style.transformOrigin = `${x1}px ${y1}px`;
+    }
     secondMarks[minutes] = line;
     fragment.appendChild(line);
   }
@@ -57,6 +65,14 @@ function updateClock() {
   const hours = now.getHours() % 12;
   const minutes = now.getMinutes();
   const seconds = now.getSeconds();
+  const date = dateFormatter.format(now);
+  if (date !== displayedDate) {
+    const parts = dateFormatter.formatToParts(now);
+    document.getElementById('clock-weekday').textContent = parts.find(part => part.type === 'weekday').value;
+    document.getElementById('clock-day-month').textContent =
+      `${parts.find(part => part.type === 'day').value} ${parts.find(part => part.type === 'month').value}`;
+    displayedDate = date;
+  }
 
   const minuteAngle = (minutes + seconds / 60) * 6;
   const hourAngle = (hours + minutes / 60 + seconds / 3600) * 30;
